@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from harpd_research import citation
 
 
@@ -14,7 +16,8 @@ def test_bibtex_has_required_fields() -> None:
     assert entry.startswith("@misc{harpd-ai-datasets,")
     assert "author" in entry
     assert "title" in entry
-    assert "year       = {2026}" in entry
+    # Fields are column-aligned for readability, so match whitespace loosely.
+    assert re.search(r"year\s*=\s*\{2026\}", entry), entry
     assert "https://harpd.com/data/" in entry
     assert entry.rstrip().endswith("}")
 

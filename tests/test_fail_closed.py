@@ -119,14 +119,16 @@ def test_generate_returns_nonzero_on_empty_data(generator, empty_base, tmp_path,
     monkeypatch.setenv("HARPD_DATA_BASE", empty_base)
     monkeypatch.setattr(generator, "REPORTS_DIR", tmp_path)
     assert generator.generate() == 1
-    assert list(tmp_path.iterdir()) == [], "no report may be written on empty data"
+    # The fixture dataset lives inside tmp_path, so assert on reports, not on
+    # tmp_path being empty: the guarantee is that no report file is emitted.
+    assert list(tmp_path.glob("*.md")) == [], "no report may be written on empty data"
 
 
 def test_generate_returns_nonzero_on_missing_data(generator, missing_base, tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("HARPD_DATA_BASE", missing_base)
     monkeypatch.setattr(generator, "REPORTS_DIR", tmp_path)
     assert generator.generate() == 1
-    assert list(tmp_path.iterdir()) == []
+    assert list(tmp_path.glob("*.md")) == [], "no report may be written on missing data"
 
 
 def test_generate_does_not_overwrite_last_valid_report(
