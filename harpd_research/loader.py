@@ -254,9 +254,7 @@ def load_categories(base: str | None = None) -> pd.DataFrame:
     """Load the 28 category boards with product counts and placement state."""
     payload = fetch_json("data/rankings/categories.json", base=base)
     frame = _records_frame(payload, "categories", "rankings/categories")
-    frame = _coerce_numeric(
-        frame, ["productCount", "rankedProductCount", "totalRankPoints"]
-    )
+    frame = _coerce_numeric(frame, ["productCount", "rankedProductCount", "totalRankPoints"])
     return _attach_meta(frame, payload)
 
 
@@ -306,6 +304,7 @@ def load_research_index(base: str | None = None) -> pd.DataFrame:
     frame = _coerce_numeric(frame, ["listingCount"])
     return _attach_meta(frame, payload)
 
+
 def load_evidence(base: str | None = None) -> dict[str, Any]:
     """Load the evidence register (claims, datasets, graph, rules)."""
     payload = fetch_json("data/evidence/evidence.json", base=base)
@@ -321,9 +320,7 @@ def load_benchmark_results(base: str | None = None) -> tuple[pd.DataFrame, dict[
     publisher's own methodology note, which callers MUST surface -- the published
     figures are a MODELED estimate, not a live measurement.
     """
-    payload = fetch_json(
-        "data/2026-08-json-extraction.json", base=base or LLM_COST_BENCHMARK_BASE
-    )
+    payload = fetch_json("data/2026-08-json-extraction.json", base=base or LLM_COST_BENCHMARK_BASE)
     _require(isinstance(payload, dict), "benchmark: expected an object")
     frame = _records_frame(payload, "results", "benchmark/json-extraction")
     frame = _coerce_numeric(

@@ -115,7 +115,9 @@ def test_loader_refuses_missing_products(missing_base: str) -> None:
 # --------------------------------------------------------------------------
 
 
-def test_generate_returns_nonzero_on_empty_data(generator, empty_base, tmp_path, monkeypatch) -> None:
+def test_generate_returns_nonzero_on_empty_data(
+    generator, empty_base, tmp_path, monkeypatch
+) -> None:
     monkeypatch.setenv("HARPD_DATA_BASE", empty_base)
     monkeypatch.setattr(generator, "REPORTS_DIR", tmp_path)
     assert generator.generate() == 1
@@ -124,7 +126,9 @@ def test_generate_returns_nonzero_on_empty_data(generator, empty_base, tmp_path,
     assert list(tmp_path.glob("*.md")) == [], "no report may be written on empty data"
 
 
-def test_generate_returns_nonzero_on_missing_data(generator, missing_base, tmp_path, monkeypatch) -> None:
+def test_generate_returns_nonzero_on_missing_data(
+    generator, missing_base, tmp_path, monkeypatch
+) -> None:
     monkeypatch.setenv("HARPD_DATA_BASE", missing_base)
     monkeypatch.setattr(generator, "REPORTS_DIR", tmp_path)
     assert generator.generate() == 1
@@ -146,7 +150,9 @@ def test_generate_does_not_overwrite_last_valid_report(
     assert existing.read_text(encoding="utf-8") == sentinel
 
 
-def test_generate_check_mode_writes_nothing(generator, tmp_path, monkeypatch, datasets_base) -> None:
+def test_generate_check_mode_writes_nothing(
+    generator, tmp_path, monkeypatch, datasets_base
+) -> None:
     monkeypatch.setenv("HARPD_DATA_BASE", datasets_base)
     monkeypatch.setattr(generator, "REPORTS_DIR", tmp_path)
     assert generator.generate(check_only=True) == 0
@@ -155,12 +161,11 @@ def test_generate_check_mode_writes_nothing(generator, tmp_path, monkeypatch, da
 
 def test_generate_fails_when_a_builder_raises(generator, tmp_path, monkeypatch) -> None:
     """If any builder raises, nothing at all is written."""
+
     def exploding_builder():
         raise generator.GenerationFailed("simulated failure")
 
-    monkeypatch.setattr(
-        generator, "BUILDERS", {"2026-09-ai-market-report.md": exploding_builder}
-    )
+    monkeypatch.setattr(generator, "BUILDERS", {"2026-09-ai-market-report.md": exploding_builder})
     monkeypatch.setattr(generator, "REPORTS_DIR", tmp_path)
     assert generator.generate() == 1
     assert list(tmp_path.iterdir()) == []

@@ -57,9 +57,7 @@ def market_composition(products: pd.DataFrame, top_n: int | None = None) -> pd.D
     if missing:
         raise ValueError(f"market_composition: products missing columns {sorted(missing)}")
     if products.empty:
-        return pd.DataFrame(
-            columns=["category", "categoryName", "productCount", "sharePct"]
-        )
+        return pd.DataFrame(columns=["category", "categoryName", "productCount", "sharePct"])
 
     grouped = (
         products.groupby(["category", "categoryName"], dropna=False)
@@ -162,9 +160,7 @@ def category_boards(categories: pd.DataFrame) -> pd.DataFrame:
     if missing:
         raise ValueError(f"category_boards: categories missing columns {sorted(missing)}")
     if categories.empty:
-        return pd.DataFrame(
-            columns=["slug", "name", "productCount", "rankedProductCount", "state"]
-        )
+        return pd.DataFrame(columns=["slug", "name", "productCount", "rankedProductCount", "state"])
 
     frame = categories.copy()
     if "rankedProductCount" not in frame.columns:
@@ -187,9 +183,7 @@ def category_boards(categories: pd.DataFrame) -> pd.DataFrame:
         ]
         if column in frame.columns
     ]
-    frame = frame.loc[:, keep].sort_values(
-        ["productCount", "slug"], ascending=[False, True]
-    )
+    frame = frame.loc[:, keep].sort_values(["productCount", "slug"], ascending=[False, True])
     return frame.reset_index(drop=True)
 
 
@@ -251,9 +245,7 @@ def discovery_coverage(records: pd.DataFrame, label: str) -> dict[str, object]:
             "hasData": False,
         }
 
-    domains = (
-        records["domain"].dropna().nunique() if "domain" in records.columns else 0
-    )
+    domains = records["domain"].dropna().nunique() if "domain" in records.columns else 0
 
     on_board = 0
     if "on_rank_board" in records.columns:
@@ -296,12 +288,7 @@ def _as_bool(series: pd.Series) -> pd.Series:
     """Normalise a column that may be bool, 0/1 or 'true'/'false' strings."""
     if series.dtype == bool:
         return series
-    return (
-        series.astype(str)
-        .str.strip()
-        .str.lower()
-        .isin({"true", "1", "yes", "t"})
-    )
+    return series.astype(str).str.strip().str.lower().isin({"true", "1", "yes", "t"})
 
 
 def discovery_sources(records: pd.DataFrame, top_n: int = 10) -> pd.DataFrame:
@@ -326,9 +313,7 @@ def discovery_sources(records: pd.DataFrame, top_n: int = 10) -> pd.DataFrame:
     return grouped.head(top_n).reset_index(drop=True)
 
 
-def cross_index_overlap(
-    indexes: dict[str, pd.DataFrame], min_indexes: int = 2
-) -> pd.DataFrame:
+def cross_index_overlap(indexes: dict[str, pd.DataFrame], min_indexes: int = 2) -> pd.DataFrame:
     """Domains observed in more than one discovery index.
 
     Overlap is a coverage observation. It does not imply a product is better.
@@ -353,9 +338,9 @@ def cross_index_overlap(
         .reset_index()
     )
     grouped = grouped[grouped["indexCount"] >= min_indexes]
-    return grouped.sort_values(
-        ["indexCount", "domain"], ascending=[False, True]
-    ).reset_index(drop=True)
+    return grouped.sort_values(["indexCount", "domain"], ascending=[False, True]).reset_index(
+        drop=True
+    )
 
 
 # --------------------------------------------------------------------------
@@ -509,6 +494,6 @@ def evidence_audit(evidence: dict[str, object]) -> pd.DataFrame:
     )
     grouped["supported"] = grouped["supported"].astype(int)
     grouped["withSource"] = grouped["withSource"].astype(int)
-    return grouped.sort_values(
-        ["claims", "claimType"], ascending=[False, True]
-    ).reset_index(drop=True)
+    return grouped.sort_values(["claims", "claimType"], ascending=[False, True]).reset_index(
+        drop=True
+    )

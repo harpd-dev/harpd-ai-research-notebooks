@@ -116,8 +116,7 @@ def build_market_report() -> ReportData:
         f"{placement['distinctPlacementValues']} distinct point values exist.",
         "Category board states: "
         + "; ".join(
-            f"{row.state} = {int(row.categories)} categories / "
-            f"{int(row.products):,} products"
+            f"{row.state} = {int(row.categories)} categories / {int(row.products):,} products"
             for row in category_states.itertuples()
         )
         + ".",
@@ -234,8 +233,7 @@ def build_ranking_report() -> ReportData:
         "across them.",
         f"{placement['productsWithPlacement']:,} of {placement['totalProducts']:,} "
         f"products ({placement['placementCoveragePct']}%) hold any Rank Points.",
-        f"Total Rank Points on the overall board: "
-        f"{placement['totalRankPoints']:,.0f}.",
+        f"Total Rank Points on the overall board: {placement['totalRankPoints']:,.0f}.",
         *findings_top,
         "Because placement coverage is effectively zero, no meaningful "
         "concentration curve, Gini coefficient or top-N share can be computed. "
@@ -323,9 +321,7 @@ def build_agent_report() -> ReportData:
         .sort_values("category_confidence")
         .reset_index(drop=True)
     )
-    confidence["sharePct"] = (
-        confidence["records"] / confidence["records"].sum() * 100
-    ).round(2)
+    confidence["sharePct"] = (confidence["records"] / confidence["records"].sum() * 100).round(2)
     full_confidence = int((confidence_series >= 1.0).sum())
     low_confidence = int((confidence_series <= 0.5).sum())
 
@@ -333,9 +329,7 @@ def build_agent_report() -> ReportData:
 
     empty_profile = 0
     if "profile_url" in agents.columns:
-        empty_profile = int(
-            agents["profile_url"].fillna("").astype(str).str.strip().eq("").sum()
-        )
+        empty_profile = int(agents["profile_url"].fillna("").astype(str).str.strip().eq("").sum())
 
     findings = [
         f"The AI agent index covers {coverage['records']:,} records across "
@@ -351,8 +345,7 @@ def build_agent_report() -> ReportData:
         f"confidence 1.0, while {low_confidence:,} "
         f"({round(low_confidence / coverage['records'] * 100, 2)}%) sit at 0.5 or "
         f"below. Mean confidence is {coverage['meanCategoryConfidence']}.",
-        f"Observation window: {coverage['observedAtMin']} to "
-        f"{coverage['observedAtMax']}.",
+        f"Observation window: {coverage['observedAtMin']} to {coverage['observedAtMax']}.",
         f"{empty_profile:,} of {coverage['records']:,} records have an empty "
         "`profile_url`, so the slice cannot be joined to catalog profiles on that "
         "field.",
@@ -443,8 +436,7 @@ def generate(check_only: bool = False) -> int:
         except (loader.DatasetError, ReportError, GenerationFailed, ValueError) as exc:
             print(f"FAIL {filename}: {exc}", file=sys.stderr)
             print(
-                "Refusing to write. Any previously committed report is left "
-                "untouched.",
+                "Refusing to write. Any previously committed report is left untouched.",
                 file=sys.stderr,
             )
             return 1
@@ -475,10 +467,7 @@ def generate(check_only: bool = False) -> int:
         written.append(filename)
         print(f"WROTE {filename}: sample_size={meta['sample_size']:,}")
 
-    print(
-        f"\n{len(written)} written, {len(unchanged)} unchanged "
-        f"({len(BUILDERS)} reports total)"
-    )
+    print(f"\n{len(written)} written, {len(unchanged)} unchanged ({len(BUILDERS)} reports total)")
     return 0
 
 

@@ -17,9 +17,19 @@ def test_load_products_shape(offline: str) -> None:
     assert isinstance(frame, pd.DataFrame)
     assert not frame.empty
     expected = {
-        "id", "name", "slug", "url", "category", "categoryName",
-        "rank", "rankPoints", "verified", "updatedAt", "website",
-        "description", "productType",
+        "id",
+        "name",
+        "slug",
+        "url",
+        "category",
+        "categoryName",
+        "rank",
+        "rankPoints",
+        "verified",
+        "updatedAt",
+        "website",
+        "description",
+        "productType",
     }
     assert expected.issubset(set(frame.columns))
     assert pd.api.types.is_numeric_dtype(frame["rank"])
@@ -55,9 +65,7 @@ def test_load_categories_shape(offline: str) -> None:
 def test_load_ai_market_index_shape(offline: str) -> None:
     frame = loader.load_ai_market_index()
     assert not frame.empty
-    assert {"category", "categoryName", "productCount", "totalRankPoints"}.issubset(
-        frame.columns
-    )
+    assert {"category", "categoryName", "productCount", "totalRankPoints"}.issubset(frame.columns)
     # The nested topProduct object must be flattened, not left as a dict.
     assert "topProductName" in frame.columns
     assert not frame["topProductName"].isna().all()
@@ -72,8 +80,16 @@ def test_load_discovery_index_shapes(offline: str) -> None:
         frame = loader_fn()
         assert not frame.empty, f"{name} index should not be empty"
         expected = {
-            "id", "name", "domain", "url", "category", "category_confidence",
-            "discovered_from", "observed_at", "on_rank_board", "profile_url",
+            "id",
+            "name",
+            "domain",
+            "url",
+            "category",
+            "category_confidence",
+            "discovered_from",
+            "observed_at",
+            "on_rank_board",
+            "profile_url",
         }
         assert expected.issubset(set(frame.columns)), f"{name} index columns"
 
@@ -81,9 +97,7 @@ def test_load_discovery_index_shapes(offline: str) -> None:
 def test_load_research_index_shape(offline: str) -> None:
     frame = loader.load_research_index()
     assert not frame.empty
-    assert {"family", "familyTitle", "monthKey", "url", "listingCount"}.issubset(
-        frame.columns
-    )
+    assert {"family", "familyTitle", "monthKey", "url", "listingCount"}.issubset(frame.columns)
 
 
 def test_load_evidence_shape(offline: str) -> None:
@@ -117,9 +131,7 @@ def test_available_datasets_returns_registry(offline: str) -> None:
 def test_load_benchmark_results_carries_modeled_flag(benchmark_base: str) -> None:
     frame, meta = loader.load_benchmark_results(base=benchmark_base)
     assert not frame.empty
-    assert {"model", "successRate", "costPerTask", "costPerSuccessfulTask"}.issubset(
-        frame.columns
-    )
+    assert {"model", "successRate", "costPerTask", "costPerSuccessfulTask"}.issubset(frame.columns)
     # The MODELED disclosure must survive loading; callers depend on it.
     assert meta.get("isModeled") is True
     assert meta.get("methodologyNote")
@@ -128,9 +140,7 @@ def test_load_benchmark_results_carries_modeled_flag(benchmark_base: str) -> Non
 def test_load_llm_pricing_shape(benchmark_base: str) -> None:
     frame = loader.load_llm_pricing(base=benchmark_base)
     assert not frame.empty
-    assert {
-        "id", "provider", "input_per_million", "output_per_million"
-    }.issubset(frame.columns)
+    assert {"id", "provider", "input_per_million", "output_per_million"}.issubset(frame.columns)
 
 
 # --------------------------------------------------------------------------

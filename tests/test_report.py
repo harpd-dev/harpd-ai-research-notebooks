@@ -33,8 +33,14 @@ def make_report(**overrides) -> ReportData:
 
 def test_required_sections_constant() -> None:
     expected = {
-        "Data timestamp", "Sample size", "Methodology", "Limitations",
-        "Dataset link", "Source", "Reproduction instructions", "Citation",
+        "Data timestamp",
+        "Sample size",
+        "Methodology",
+        "Limitations",
+        "Dataset link",
+        "Source",
+        "Reproduction instructions",
+        "Citation",
     }
     assert set(report.REQUIRED_SECTIONS) == expected
 

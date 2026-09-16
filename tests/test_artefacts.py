@@ -87,7 +87,12 @@ def test_committed_report_states_the_placement_caveat(reports_dir: Path, filenam
 def test_committed_report_never_claims_quality_ranking(reports_dir: Path, filename: str) -> None:
     """No report may describe a rankPoints ordering as a quality ranking."""
     text = (reports_dir / filename).read_text(encoding="utf-8").lower()
-    for banned in ("best products", "top quality products", "highest quality", "quality ranking of products"):
+    for banned in (
+        "best products",
+        "top quality products",
+        "highest quality",
+        "quality ranking of products",
+    ):
         assert banned not in text, f"{filename} contains banned phrase: {banned}"
 
 
@@ -142,9 +147,7 @@ def test_notebook_has_required_sections_in_order(path: Path) -> None:
     for section in NOTEBOOK_SECTIONS:
         assert section in headings, f"{path.name} is missing the '{section}' section"
         positions.append(headings.index(section))
-    assert positions == sorted(positions), (
-        f"{path.name} sections are out of order: {headings}"
-    )
+    assert positions == sorted(positions), f"{path.name} sections are out of order: {headings}"
 
 
 @pytest.mark.parametrize("path", notebook_files(Path(__file__).resolve().parents[1] / "notebooks"))
@@ -158,9 +161,7 @@ def test_notebook_has_code_cells(path: Path) -> None:
 def test_notebook_uses_the_shared_package(path: Path) -> None:
     """Logic must not be duplicated: notebooks import harpd_research."""
     notebook = json.loads(path.read_text(encoding="utf-8"))
-    source = "\n".join(
-        "".join(c["source"]) for c in notebook["cells"] if c["cell_type"] == "code"
-    )
+    source = "\n".join("".join(c["source"]) for c in notebook["cells"] if c["cell_type"] == "code")
     assert "from harpd_research import" in source, f"{path.name} does not import harpd_research"
 
 
@@ -198,10 +199,7 @@ def test_notebook_07_labels_the_data_as_modeled(notebooks_dir: Path) -> None:
 def test_notebook_has_executed_outputs(path: Path) -> None:
     """Notebooks are committed executed so GitHub renders real numbers."""
     notebook = json.loads(path.read_text(encoding="utf-8"))
-    executed = [
-        c for c in notebook["cells"]
-        if c["cell_type"] == "code" and c.get("outputs")
-    ]
+    executed = [c for c in notebook["cells"] if c["cell_type"] == "code" and c.get("outputs")]
     assert executed, f"{path.name} has no executed outputs"
     assert any(c.get("execution_count") for c in executed), (
         f"{path.name} outputs are not from a real execution"

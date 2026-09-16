@@ -71,9 +71,7 @@ def test_dataset_citation_returns_both_formats() -> None:
 
 
 def test_citation_cff_entry_shape() -> None:
-    entry = citation.citation_cff_entry(
-        title="Harpd AI Datasets", url="https://harpd.com/data/"
-    )
+    entry = citation.citation_cff_entry(title="Harpd AI Datasets", url="https://harpd.com/data/")
     assert entry["type"] == "dataset"
     assert entry["year"] == 2026
     assert entry["license"] == "CC-BY-4.0"

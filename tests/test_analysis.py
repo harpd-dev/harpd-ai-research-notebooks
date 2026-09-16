@@ -56,9 +56,7 @@ def test_market_composition_top_n(products: pd.DataFrame) -> None:
 
 
 def test_market_composition_empty_input_returns_empty_frame() -> None:
-    frame = analysis.market_composition(
-        pd.DataFrame(columns=["category", "categoryName"])
-    )
+    frame = analysis.market_composition(pd.DataFrame(columns=["category", "categoryName"]))
     assert frame.empty
     assert "productCount" in frame.columns
 
@@ -76,10 +74,16 @@ def test_market_composition_missing_columns_raises() -> None:
 def test_placement_concentration_keys(products: pd.DataFrame) -> None:
     result = analysis.placement_concentration(products)
     expected = {
-        "totalProducts", "productsWithPlacement", "productsWithoutPlacement",
-        "placementCoveragePct", "totalRankPoints", "maxRankPoints",
-        "largestPlacementSharePct", "distinctPlacementValues",
-        "has_meaningful_placement", "caveat",
+        "totalProducts",
+        "productsWithPlacement",
+        "productsWithoutPlacement",
+        "placementCoveragePct",
+        "totalRankPoints",
+        "maxRankPoints",
+        "largestPlacementSharePct",
+        "distinctPlacementValues",
+        "has_meaningful_placement",
+        "caveat",
     }
     assert expected == set(result)
 
@@ -135,12 +139,8 @@ def test_placement_concentration_missing_column_raises() -> None:
 
 def test_top_placement_columns_and_order(products: pd.DataFrame) -> None:
     frame = analysis.top_placement(products, n=5)
-    assert {"rank", "name", "categoryName", "rankPoints", "verified"}.issubset(
-        frame.columns
-    )
-    assert frame["rankPoints"].tolist() == sorted(
-        frame["rankPoints"].tolist(), reverse=True
-    )
+    assert {"rank", "name", "categoryName", "rankPoints", "verified"}.issubset(frame.columns)
+    assert frame["rankPoints"].tolist() == sorted(frame["rankPoints"].tolist(), reverse=True)
 
 
 def test_top_placement_excludes_unfunded(products: pd.DataFrame) -> None:
@@ -160,12 +160,8 @@ def test_top_placement_empty_when_no_placement() -> None:
 
 def test_category_boards_columns(categories: pd.DataFrame) -> None:
     frame = analysis.category_boards(categories)
-    assert {"slug", "name", "productCount", "rankedProductCount", "state"}.issubset(
-        frame.columns
-    )
-    assert frame["productCount"].tolist() == sorted(
-        frame["productCount"].tolist(), reverse=True
-    )
+    assert {"slug", "name", "productCount", "rankedProductCount", "state"}.issubset(frame.columns)
+    assert frame["productCount"].tolist() == sorted(frame["productCount"].tolist(), reverse=True)
 
 
 def test_category_boards_missing_columns_raises() -> None:
@@ -181,8 +177,11 @@ def test_ranking_board_comparison_columns(offline: str) -> None:
     )
     assert list(frame["board"]) == ["overall", "monthly", "weekly"]
     assert {
-        "records", "distinctProducts", "productsWithPlacement",
-        "totalRankPoints", "categoriesRepresented",
+        "records",
+        "distinctProducts",
+        "productsWithPlacement",
+        "totalRankPoints",
+        "categoriesRepresented",
     }.issubset(frame.columns)
 
 
@@ -194,9 +193,16 @@ def test_ranking_board_comparison_columns(offline: str) -> None:
 def test_discovery_coverage_keys(agents: pd.DataFrame) -> None:
     result = analysis.discovery_coverage(agents, "agents")
     expected = {
-        "label", "records", "distinctDomains", "onRankBoard", "onRankBoardPct",
-        "meanCategoryConfidence", "distinctDiscoverySources",
-        "observedAtMin", "observedAtMax", "hasData",
+        "label",
+        "records",
+        "distinctDomains",
+        "onRankBoard",
+        "onRankBoardPct",
+        "meanCategoryConfidence",
+        "distinctDiscoverySources",
+        "observedAtMin",
+        "observedAtMax",
+        "hasData",
     }
     assert expected == set(result)
     assert result["hasData"] is True
@@ -212,9 +218,7 @@ def test_discovery_coverage_empty_input() -> None:
 
 def test_discovery_coverage_handles_string_booleans() -> None:
     """on_rank_board arrives as a real bool in JSON and as a string in CSV."""
-    frame = pd.DataFrame(
-        {"domain": ["a.com", "b.com"], "on_rank_board": ["true", "false"]}
-    )
+    frame = pd.DataFrame({"domain": ["a.com", "b.com"], "on_rank_board": ["true", "false"]})
     result = analysis.discovery_coverage(frame, "strings")
     assert result["onRankBoard"] == 1
 
@@ -222,9 +226,7 @@ def test_discovery_coverage_handles_string_booleans() -> None:
 def test_discovery_sources_columns(agents: pd.DataFrame) -> None:
     frame = analysis.discovery_sources(agents)
     assert list(frame.columns) == ["discovered_from", "recordCount", "sharePct"]
-    assert frame["recordCount"].tolist() == sorted(
-        frame["recordCount"].tolist(), reverse=True
-    )
+    assert frame["recordCount"].tolist() == sorted(frame["recordCount"].tolist(), reverse=True)
 
 
 def test_discovery_sources_empty_input() -> None:
@@ -268,9 +270,14 @@ def test_cost_per_successful_task_columns(benchmark) -> None:
     results, meta = benchmark
     frame = analysis.cost_per_successful_task(results, meta)
     assert {
-        "efficiencyOrder", "model", "successRate", "costPerTask",
-        "costPerSuccessfulTask", "publishedCostPerSuccessfulTask",
-        "recomputedDeltaPct", "isModeled",
+        "efficiencyOrder",
+        "model",
+        "successRate",
+        "costPerTask",
+        "costPerSuccessfulTask",
+        "publishedCostPerSuccessfulTask",
+        "recomputedDeltaPct",
+        "isModeled",
     }.issubset(frame.columns)
 
 
