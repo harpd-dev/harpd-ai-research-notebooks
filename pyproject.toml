@@ -1,0 +1,95 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "harpd-research"
+version = "1.0.0"
+description = "Reproducible research notebooks and reports computed from Harpd open AI datasets"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "CC-BY-4.0" }
+authors = [{ name = "Harpd", url = "https://harpd.com" }]
+keywords = [
+    "ai",
+    "research",
+    "dataset",
+    "open-data",
+    "reproducible-research",
+    "pandas",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "License :: OSI Approved :: Creative Commons Attribution 4.0",
+]
+dependencies = [
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "requests>=2.31",
+    "matplotlib>=3.8",
+    "tabulate>=0.9",
+]
+
+[project.optional-dependencies]
+notebooks = ["jupyter>=1.0", "nbconvert>=7.10"]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[project.urls]
+Homepage = "https://harpd.com/data/"
+Repository = "https://github.com/harpd-dev/harpd-ai-research-notebooks"
+"Source datasets" = "https://github.com/harpd-dev/harpd-ai-datasets"
+Citation = "https://harpd.com/data/"
+
+[tool.setuptools]
+packages = ["harpd_research"]
+
+# --------------------------------------------------------------------------
+# ruff
+# --------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = [".venv", "build", "dist", ".cache"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+]
+ignore = [
+    # Reports and notebooks print long f-strings on purpose.
+    "E501",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Notebook cells are exploratory artefacts, not library code.
+#   E402 / I001 -- the first cell must insert the repo root on sys.path before it
+#                  can import harpd_research, so imports cannot be sorted to the top.
+#   F841 / F401 -- intermediate frames and imports kept for the reader's benefit.
+#   E501        -- printed tables and finding strings are intentionally wide.
+"notebooks/*" = ["E402", "I001", "F841", "F401", "E501"]
+# The report generator imports harpd_research after inserting the repo root.
+"scripts/*" = ["E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["harpd_research"]
+
+# --------------------------------------------------------------------------
+# pytest
+# --------------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "network: test requires network access (deselected by default in CI)",
+]

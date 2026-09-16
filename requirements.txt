@@ -1,0 +1,23 @@
+# Runtime dependencies for the notebooks, the report generator and the tests.
+#
+# Install with:
+#   python -m venv .venv && . .venv/bin/activate
+#   pip install -r requirements.txt
+#
+# Versions are lower-bounded to the releases this repository was verified
+# against. Nothing here requires network access at import time.
+
+pandas>=2.2
+numpy>=1.26
+matplotlib>=3.8
+requests>=2.31
+jsonschema>=4.20
+tabulate>=0.9
+
+# Notebook execution
+jupyter>=1.0
+nbconvert>=7.10
+
+# Development
+pytest>=8.0
+ruff>=0.5

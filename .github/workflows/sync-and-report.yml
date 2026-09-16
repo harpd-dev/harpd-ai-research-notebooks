@@ -1,0 +1,267 @@
+name: Sync datasets and regenerate reports
+
+# Fetches the latest published Harpd datasets, re-executes the notebooks,
+# regenerates every report, validates them, and commits only if something
+# actually changed.
+#
+# Failure semantics (deliberate, and the reason this workflow is verbose):
+#   * The generator itself fails closed: it refuses to write a report when a
+#     dataset is missing or empty.
+#   * reports/ is snapshotted before generation and restored on any failure, so
+#     a bad run can never overwrite the last valid report.
+#   * Reports are generated into a staging directory, validated there, and only
+#     then promoted into reports/.
+#   * Nothing is committed unless the working tree actually changed.
+
+on:
+  schedule:
+    # Daily at 06:20 UTC — pick up dataset refreshes.
+    - cron: "20 6 * * *"
+    # First of the month at 07:00 UTC — cut a monthly release.
+    - cron: "0 7 1 * *"
+  workflow_dispatch:
+    inputs:
+      skip_notebooks:
+        description: "Skip notebook execution (reports only)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-and-report
+  cancel-in-progress: false
+
+env:
+  HARPD_DATASETS_REPO: harpd-dev/harpd-ai-datasets
+
+jobs:
+  sync-and-report:
+    name: Sync, execute, report, commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # ----------------------------------------------------------------
+      # 1. Sync datasets
+      # ----------------------------------------------------------------
+      - name: Sync datasets from the published registry
+        id: sync
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, sys, urllib.request
+
+          base = "https://raw.githubusercontent.com/harpd-dev/harpd-ai-datasets/main/"
+          print("Syncing from", base)
+          with urllib.request.urlopen(base + "data/manifest.json", timeout=60) as r:
+              manifest = json.load(r)
+          print("manifest version :", manifest["version"])
+          print("manifest updatedAt:", manifest["updatedAt"])
+          print("datasets listed  :", len(manifest["datasets"]))
+
+          # Fail the sync if any declared dataset is not actually reachable.
+          missing = []
+          for ds in manifest["datasets"]:
+              path = ds.get("json")
+              if not path:
+                  continue
+              try:
+                  req = urllib.request.Request(base + path, method="HEAD")
+                  with urllib.request.urlopen(req, timeout=30) as resp:
+                      if resp.status != 200:
+                          missing.append(path)
+              except Exception as exc:            # noqa: BLE001
+                  print(f"  unreachable: {path} ({exc})")
+                  missing.append(path)
+
+          if missing:
+              print("::error::declared datasets are unreachable:", missing)
+              sys.exit(1)
+          print(f"all {len(manifest['datasets'])} declared datasets reachable")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              fh.write(f"version={manifest['version']}\n")
+              fh.write(f"updated_at={manifest['updatedAt']}\n")
+          PY
+
+      # ----------------------------------------------------------------
+      # 2. Snapshot the last valid reports (rollback point)
+      # ----------------------------------------------------------------
+      - name: Snapshot last valid reports
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/reports-backup
+          cp -a reports/. /tmp/reports-backup/
+          echo "backed up $(ls -1 reports/*.md | wc -l) report(s)"
+          git status --short
+
+      # ----------------------------------------------------------------
+      # 3. Re-execute notebooks (proves the analysis still runs)
+      # ----------------------------------------------------------------
+      - name: Execute notebooks
+        if: ${{ github.event.inputs.skip_notebooks != 'true' }}
+        id: notebooks
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/executed
+          failed=0
+          for nb in notebooks/*.ipynb; do
+            name="$(basename "$nb")"
+            echo "::group::executing $name"
+            if jupyter nbconvert --to notebook --execute \
+                 --output-dir /tmp/executed \
+                 --ExecutePreprocessor.timeout=900 "$nb"; then
+              echo "OK $name"
+            else
+              echo "::error::failed to execute $name"
+              failed=1
+            fi
+            echo "::endgroup::"
+          done
+          exit "$failed"
+
+      - name: Restore reports if notebooks failed
+        if: ${{ failure() && steps.notebooks.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          echo "::warning::notebook execution failed; restoring reports and aborting"
+          rm -rf reports && mkdir -p reports
+          cp -a /tmp/reports-backup/. reports/
+          echo "reports/ restored from backup; nothing will be committed"
+
+      # ----------------------------------------------------------------
+      # 4. Generate reports into staging, then validate
+      # ----------------------------------------------------------------
+      - name: Generate reports into staging
+        id: generate
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/reports-staging
+          # generate_reports.py writes to reports/; point it at staging by
+          # generating there and validating before promotion.
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, ".")
+          sys.path.insert(0, "scripts")
+          import importlib.util
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location(
+              "generate_reports", Path("scripts/generate_reports.py")
+          )
+          gen = importlib.util.module_from_spec(spec)
+          sys.modules["generate_reports"] = gen
+          spec.loader.exec_module(gen)
+
+          gen.REPORTS_DIR = Path("/tmp/reports-staging")
+          code = gen.generate()
+          print("generator exit code:", code)
+          sys.exit(code)
+          PY
+
+      - name: Restore reports if generation failed
+        if: ${{ failure() && steps.generate.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          echo "::warning::report generation failed; restoring reports and aborting"
+          rm -rf reports && mkdir -p reports
+          cp -a /tmp/reports-backup/. reports/
+
+      - name: Validate staged reports before promoting
+        id: validate
+        run: |
+          set -euo pipefail
+          count="$(ls -1 /tmp/reports-staging/*.md 2>/dev/null | wc -l)"
+          echo "staged reports: $count"
+          if [ "$count" -ne 3 ]; then
+            echo "::error::expected 3 staged reports, found $count"
+            exit 1
+          fi
+          python scripts/validate_reports.py --reports-dir /tmp/reports-staging
+
+      - name: Restore reports if validation failed
+        if: ${{ failure() && steps.validate.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          echo "::warning::validation failed; restoring reports and aborting"
+          rm -rf reports && mkdir -p reports
+          cp -a /tmp/reports-backup/. reports/
+
+      # ----------------------------------------------------------------
+      # 5. Promote and commit only if changed
+      # ----------------------------------------------------------------
+      - name: Promote staged reports
+        run: |
+          set -euo pipefail
+          cp -a /tmp/reports-staging/. reports/
+          python scripts/validate_reports.py
+          echo "promoted; final validation passed"
+
+      - name: Check for changes
+        id: changes
+        run: |
+          set -euo pipefail
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "no changes since the last sync"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git --no-pager diff --stat
+          fi
+
+      - name: Commit and push
+        if: ${{ steps.changes.outputs.changed == 'true' }}
+        run: |
+          set -euo pipefail
+          git config user.name  "harpd-sync-bot"
+          git config user.email "harpdsupport@gmail.com"
+          git add reports/ notebooks/
+          git commit -m "chore(reports): sync datasets ${{ steps.sync.outputs.version }} and regenerate reports
+
+          Dataset version : ${{ steps.sync.outputs.version }}
+          Dataset updatedAt: ${{ steps.sync.outputs.updated_at }}
+          Generated by .github/workflows/sync-and-report.yml"
+          git push
+
+      - name: Nothing to commit
+        if: ${{ steps.changes.outputs.changed == 'false' }}
+        run: echo "Reports and notebooks are already up to date."
+
+      # ----------------------------------------------------------------
+      # 6. Monthly release
+      # ----------------------------------------------------------------
+      - name: Monthly release
+        if: ${{ github.event.schedule == '0 7 1 * *' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="data-$(date -u +%Y-%m)"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "release $tag already exists; skipping"
+            exit 0
+          fi
+          gh release create "$tag" \
+            --title "Harpd AI research reports — $tag" \
+            --notes "Reports generated from Harpd dataset version ${{ steps.sync.outputs.version }} (dataset updatedAt ${{ steps.sync.outputs.updated_at }}).
+
+          Contents: reports/ as of this month's dataset snapshot.
+          Every figure is computed by pandas over the published data; see each report's Methodology and Limitations sections.
+
+          Data: https://harpd.com/data/ · https://github.com/harpd-dev/harpd-ai-datasets" \
+            reports/*.md

@@ -1,0 +1,84 @@
+name: Validate reports
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "reports/**"
+      - "scripts/validate_reports.py"
+      - "harpd_research/report.py"
+      - ".github/workflows/validate.yml"
+  pull_request:
+    paths:
+      - "reports/**"
+      - "scripts/validate_reports.py"
+      - "harpd_research/report.py"
+      - ".github/workflows/validate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-reports:
+    name: Required sections + citation block
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate committed reports
+        run: python scripts/validate_reports.py
+
+      - name: Assert every report has a Citation block
+        run: |
+          set -euo pipefail
+          status=0
+          for report in reports/*.md; do
+            for needle in '## Citation' '### BibTeX' '```bibtex' '### APA'; do
+              if ! grep -qF "$needle" "$report"; then
+                echo "::error file=$report::missing '$needle'"
+                status=1
+              fi
+            done
+            if ! grep -qE '^Records analysed: \*\*[1-9]' "$report"; then
+              echo "::error file=$report::sample size is zero or absent"
+              status=1
+            fi
+          done
+          exit "$status"
+
+      - name: Assert reports never present placement as quality
+        run: |
+          set -euo pipefail
+          status=0
+          for report in reports/*.md; do
+            if grep -qiE 'best products|highest quality|quality ranking of products' "$report"; then
+              echo "::error file=$report::report presents placement as a quality ranking"
+              status=1
+            fi
+            if ! grep -qF 'promotional placement bought with Credits' "$report"; then
+              echo "::error file=$report::missing the promotional-placement caveat"
+              status=1
+            fi
+          done
+          exit "$status"
+
+      - name: Assert no fabricated endorsements
+        run: |
+          set -euo pipefail
+          status=0
+          for report in reports/*.md; do
+            if grep -qiE 'cited by|used by researchers|adopted by|peer reviewed' "$report"; then
+              echo "::error file=$report::contains an unsupported endorsement claim"
+              status=1
+            fi
+          done
+          exit "$status"
