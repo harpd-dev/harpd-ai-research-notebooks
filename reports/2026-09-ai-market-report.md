@@ -6,9 +6,9 @@
 
 ## Data timestamp
 
-- Dataset `generatedAt`: `2026-09-26T13:46:24.888Z`
-- Dataset `lastUpdated`: `2026-09-26T13:46:26.357Z`
-- Snapshot date used for this report: `2026-09-26`
+- Dataset `generatedAt`: `2026-09-27T14:44:10.916Z`
+- Dataset `lastUpdated`: `2026-09-27T14:44:12.707Z`
+- Snapshot date used for this report: `2026-09-27`
 
 The snapshot date is taken from the dataset itself, not from the clock at
 render time. Re-running the generator against an unchanged snapshot
@@ -85,7 +85,7 @@ reproduces this file byte for byte.
 
 ## Notes
 
-- Manifest declares version `2026.9` with `updatedAt` 2026-09-26T13:46:26.357Z.
+- Manifest declares version `2026.9` with `updatedAt` 2026-09-27T14:44:12.707Z.
 - Manifest lists 11 published datasets.
 - The market index file independently reports 1,125 products across 27 categories, consistent with the catalog count.
 
@@ -145,7 +145,7 @@ If you use this report, cite the underlying datasets:
 
 ### APA
 
-Harpd. (2026). *Harpd AI Datasets — Products & Category Boards*. https://harpd.com/data/ (Accessed: 2026-09-26)
+Harpd. (2026). *Harpd AI Datasets — Products & Category Boards*. https://harpd.com/data/ (Accessed: 2026-09-27)
 
 ### Licence
 
