@@ -6,9 +6,9 @@
 
 ## Data timestamp
 
-- Dataset `generatedAt`: `2026-09-30T15:58:02.407Z`
-- Dataset `lastUpdated`: `2026-09-30T15:58:03.705Z`
-- Snapshot date used for this report: `2026-09-30`
+- Dataset `generatedAt`: `2026-10-01T16:53:35.410Z`
+- Dataset `lastUpdated`: `2026-10-01T16:53:36.929Z`
+- Snapshot date used for this report: `2026-10-01`
 
 The snapshot date is taken from the dataset itself, not from the clock at
 render time. Re-running the generator against an unchanged snapshot
@@ -52,7 +52,7 @@ reproduces this file byte for byte.
 
 ## Notes
 
-- Period window for the overall board: monthKey `2026-09`.
+- Period window for the overall board: monthKey `2026-10`.
 - The table below is a **promotional placement ordering**, not a quality ranking. It lists products by Credits spent on placement.
 
 ## Limitations
@@ -110,7 +110,7 @@ If you use this report, cite the underlying datasets:
 
 ### APA
 
-Harpd. (2026). *Harpd AI Datasets — Rankings*. https://harpd.com/rank/ (Accessed: 2026-09-30)
+Harpd. (2026). *Harpd AI Datasets — Rankings*. https://harpd.com/rank/ (Accessed: 2026-10-01)
 
 ### Licence
 
