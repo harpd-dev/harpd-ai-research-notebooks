@@ -6,9 +6,9 @@
 
 ## Data timestamp
 
-- Dataset `generatedAt`: `2026-10-05T18:33:24.274Z`
-- Dataset `lastUpdated`: `2026-10-05T18:33:25.984Z`
-- Snapshot date used for this report: `2026-10-05`
+- Dataset `generatedAt`: `2026-10-06T16:00:32.393Z`
+- Dataset `lastUpdated`: `2026-10-06T16:00:33.789Z`
+- Snapshot date used for this report: `2026-10-06`
 
 The snapshot date is taken from the dataset itself, not from the clock at
 render time. Re-running the generator against an unchanged snapshot
@@ -64,7 +64,7 @@ reproduces this file byte for byte.
 | other        | Other        |            335 |                    0 |                 0 | LISTED_NO_RP | True          |
 | developer    | Developer    |            143 |                    0 |                 0 | LISTED_NO_RP | True          |
 | agents       | Agents       |             85 |                    0 |                 0 | LISTED_NO_RP | True          |
-| ai-media     | AI Media     |             66 |                    1 |               233 | ACTIVE       | False         |
+| ai-media     | AI Media     |             66 |                    1 |               238 | ACTIVE       | False         |
 | marketing    | Marketing    |             64 |                    0 |                 0 | LISTED_NO_RP | True          |
 | seo          | SEO          |             60 |                    0 |                 0 | LISTED_NO_RP | True          |
 | productivity | Productivity |             47 |                    0 |                 0 | LISTED_NO_RP | True          |
@@ -79,13 +79,13 @@ reproduces this file byte for byte.
 - The catalog contains 1,129 products across 27 categories.
 - The largest category by listing count is 'Other' with 335 products (29.67% of the catalog).
 - Only 1 of 1,129 products (0.0886%) carry any Rank Points at all; 1,128 carry zero.
-- Total Rank Points across the whole catalog is 233, and 2 distinct point values exist.
+- Total Rank Points across the whole catalog is 238, and 2 distinct point values exist.
 - Category board states: LISTED_NO_RP = 26 categories / 1,063 products; ACTIVE = 1 categories / 66 products; EMPTY = 1 categories / 0 products.
 - Because placement coverage is near zero, this report deliberately does not compute a placement distribution, a placement leaderboard, or any concentration statistic beyond the raw counts shown above — the data cannot support them.
 
 ## Notes
 
-- Manifest declares version `2026.10` with `updatedAt` 2026-10-05T18:33:25.984Z.
+- Manifest declares version `2026.10` with `updatedAt` 2026-10-06T16:00:33.789Z.
 - Manifest lists 11 published datasets.
 - The market index file independently reports 1,129 products across 27 categories, consistent with the catalog count.
 
@@ -145,7 +145,7 @@ If you use this report, cite the underlying datasets:
 
 ### APA
 
-Harpd. (2026). *Harpd AI Datasets — Products & Category Boards*. https://harpd.com/data/ (Accessed: 2026-10-05)
+Harpd. (2026). *Harpd AI Datasets — Products & Category Boards*. https://harpd.com/data/ (Accessed: 2026-10-06)
 
 ### Licence
 
