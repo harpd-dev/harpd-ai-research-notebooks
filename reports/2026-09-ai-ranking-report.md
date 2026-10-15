@@ -6,9 +6,9 @@
 
 ## Data timestamp
 
-- Dataset `generatedAt`: `2026-10-13T16:59:44.773Z`
-- Dataset `lastUpdated`: `2026-10-13T16:59:47.117Z`
-- Snapshot date used for this report: `2026-10-13`
+- Dataset `generatedAt`: `2026-10-14T14:33:22.532Z`
+- Dataset `lastUpdated`: `2026-10-14T14:33:24.528Z`
+- Snapshot date used for this report: `2026-10-14`
 
 The snapshot date is taken from the dataset itself, not from the clock at
 render time. Re-running the generator against an unchanged snapshot
@@ -16,7 +16,7 @@ reproduces this file byte for byte.
 
 ## Sample size
 
-- Records analysed: **1,149**
+- Records analysed: **1,150**
 
 ## Methodology
 
@@ -32,22 +32,22 @@ reproduces this file byte for byte.
 
 | board   |   records |   distinctProducts |   productsWithPlacement |   totalRankPoints |   categoriesRepresented |
 |:--------|----------:|-------------------:|------------------------:|------------------:|------------------------:|
-| overall |      1149 |               1149 |                       1 |               238 |                      27 |
-| monthly |      1149 |               1149 |                       1 |               238 |                      27 |
-| weekly  |      1149 |               1149 |                       1 |               238 |                      27 |
+| overall |      1150 |               1150 |                       1 |               258 |                      27 |
+| monthly |      1150 |               1150 |                       1 |               258 |                      27 |
+| weekly  |      1150 |               1150 |                       1 |               258 |                      27 |
 
 ### Products carrying placement (promotional placement ordering)
 
 |   rank | name   | categoryName   |   rankPoints | verified   |
 |-------:|:-------|:---------------|-------------:|:-----------|
-|      1 | imgkit | AI Media       |          238 | True       |
+|      1 | imgkit | AI Media       |          258 | True       |
 
 ## Findings
 
-- All three boards (overall, monthly, weekly) are views over the same catalog of 1,149 products, so board size is identical across them.
-- 1 of 1,149 products (0.087%) hold any Rank Points.
-- Total Rank Points on the overall board: 238.
-- The single product carrying placement points is 'imgkit' with 238 Rank Points.
+- All three boards (overall, monthly, weekly) are views over the same catalog of 1,150 products, so board size is identical across them.
+- 1 of 1,150 products (0.087%) hold any Rank Points.
+- Total Rank Points on the overall board: 258.
+- The single product carrying placement points is 'imgkit' with 258 Rank Points.
 - Because placement coverage is effectively zero, no meaningful concentration curve, Gini coefficient or top-N share can be computed. This report states that rather than producing a statistic that would imply a distribution where none exists.
 
 ## Notes
@@ -110,7 +110,7 @@ If you use this report, cite the underlying datasets:
 
 ### APA
 
-Harpd. (2026). *Harpd AI Datasets — Rankings*. https://harpd.com/rank/ (Accessed: 2026-10-13)
+Harpd. (2026). *Harpd AI Datasets — Rankings*. https://harpd.com/rank/ (Accessed: 2026-10-14)
 
 ### Licence
 
