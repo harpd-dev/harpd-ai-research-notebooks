@@ -6,9 +6,9 @@
 
 ## Data timestamp
 
-- Dataset `generatedAt`: `2026-10-16T14:00:57.259Z`
-- Dataset `lastUpdated`: `2026-10-16T14:00:59.267Z`
-- Snapshot date used for this report: `2026-10-16`
+- Dataset `generatedAt`: `2026-10-17T13:00:54.265Z`
+- Dataset `lastUpdated`: `2026-10-17T13:00:55.245Z`
+- Snapshot date used for this report: `2026-10-17`
 
 The snapshot date is taken from the dataset itself, not from the clock at
 render time. Re-running the generator against an unchanged snapshot
@@ -16,7 +16,7 @@ reproduces this file byte for byte.
 
 ## Sample size
 
-- Records analysed: **1,156**
+- Records analysed: **1,161**
 
 ## Methodology
 
@@ -33,27 +33,27 @@ reproduces this file byte for byte.
 
 | category     | categoryName   |   productCount |   sharePct |
 |:-------------|:---------------|---------------:|-----------:|
-| other        | Other          |            337 |      29.15 |
-| developer    | Developer      |            144 |      12.46 |
-| agents       | Agents         |             85 |       7.35 |
-| ai-media     | AI Media       |             75 |       6.49 |
-| marketing    | Marketing      |             64 |       5.54 |
-| seo          | SEO            |             62 |       5.36 |
-| productivity | Productivity   |             49 |       4.24 |
-| audio        | Audio          |             40 |       3.46 |
-| business     | Business       |             38 |       3.29 |
-| education    | Education      |             31 |       2.68 |
-| design       | Design         |             30 |       2.6  |
-| health       | Health         |             30 |       2.6  |
-| hiring       | Hiring         |             27 |       2.34 |
-| sales        | Sales          |             17 |       1.47 |
+| other        | Other          |            337 |      29.03 |
+| developer    | Developer      |            145 |      12.49 |
+| agents       | Agents         |             85 |       7.32 |
+| ai-media     | AI Media       |             75 |       6.46 |
+| marketing    | Marketing      |             64 |       5.51 |
+| seo          | SEO            |             62 |       5.34 |
+| productivity | Productivity   |             49 |       4.22 |
+| audio        | Audio          |             40 |       3.45 |
+| business     | Business       |             38 |       3.27 |
+| education    | Education      |             31 |       2.67 |
+| design       | Design         |             30 |       2.58 |
+| health       | Health         |             30 |       2.58 |
+| hiring       | Hiring         |             27 |       2.33 |
+| sales        | Sales          |             17 |       1.46 |
 | writing      | Writing        |             16 |       1.38 |
 
 ### Category board state
 
 | state        |   categories |   products |
 |:-------------|-------------:|-----------:|
-| LISTED_NO_RP |           26 |       1081 |
+| LISTED_NO_RP |           26 |       1086 |
 | ACTIVE       |            1 |         75 |
 | EMPTY        |            1 |          0 |
 
@@ -62,7 +62,7 @@ reproduces this file byte for byte.
 | slug         | name         |   productCount |   rankedProductCount |   totalRankPoints | state        | topRankOpen   |
 |:-------------|:-------------|---------------:|---------------------:|------------------:|:-------------|:--------------|
 | other        | Other        |            337 |                    0 |                 0 | LISTED_NO_RP | True          |
-| developer    | Developer    |            144 |                    0 |                 0 | LISTED_NO_RP | True          |
+| developer    | Developer    |            145 |                    0 |                 0 | LISTED_NO_RP | True          |
 | agents       | Agents       |             85 |                    0 |                 0 | LISTED_NO_RP | True          |
 | ai-media     | AI Media     |             75 |                    1 |               258 | ACTIVE       | False         |
 | marketing    | Marketing    |             64 |                    0 |                 0 | LISTED_NO_RP | True          |
@@ -76,18 +76,18 @@ reproduces this file byte for byte.
 
 ## Findings
 
-- The catalog contains 1,156 products across 27 categories.
-- The largest category by listing count is 'Other' with 337 products (29.15% of the catalog).
-- Only 1 of 1,156 products (0.0865%) carry any Rank Points at all; 1,155 carry zero.
+- The catalog contains 1,161 products across 27 categories.
+- The largest category by listing count is 'Other' with 337 products (29.03% of the catalog).
+- Only 1 of 1,161 products (0.0861%) carry any Rank Points at all; 1,160 carry zero.
 - Total Rank Points across the whole catalog is 258, and 2 distinct point values exist.
-- Category board states: LISTED_NO_RP = 26 categories / 1,081 products; ACTIVE = 1 categories / 75 products; EMPTY = 1 categories / 0 products.
+- Category board states: LISTED_NO_RP = 26 categories / 1,086 products; ACTIVE = 1 categories / 75 products; EMPTY = 1 categories / 0 products.
 - Because placement coverage is near zero, this report deliberately does not compute a placement distribution, a placement leaderboard, or any concentration statistic beyond the raw counts shown above — the data cannot support them.
 
 ## Notes
 
-- Manifest declares version `2026.10` with `updatedAt` 2026-10-16T14:00:59.267Z.
+- Manifest declares version `2026.10` with `updatedAt` 2026-10-17T13:00:55.245Z.
 - Manifest lists 11 published datasets.
-- The market index file independently reports 1,156 products across 27 categories, consistent with the catalog count.
+- The market index file independently reports 1,161 products across 27 categories, consistent with the catalog count.
 
 ## Limitations
 
@@ -145,7 +145,7 @@ If you use this report, cite the underlying datasets:
 
 ### APA
 
-Harpd. (2026). *Harpd AI Datasets — Products & Category Boards*. https://harpd.com/data/ (Accessed: 2026-10-16)
+Harpd. (2026). *Harpd AI Datasets — Products & Category Boards*. https://harpd.com/data/ (Accessed: 2026-10-17)
 
 ### Licence
 
