@@ -6,9 +6,9 @@
 
 ## Data timestamp
 
-- Dataset `generatedAt`: `2026-11-13T17:15:39.894Z`
-- Dataset `lastUpdated`: `2026-11-13T17:15:41.902Z`
-- Snapshot date used for this report: `2026-11-13`
+- Dataset `generatedAt`: `2026-11-14T15:51:57.751Z`
+- Dataset `lastUpdated`: `2026-11-14T15:51:58.918Z`
+- Snapshot date used for this report: `2026-11-14`
 
 The snapshot date is taken from the dataset itself, not from the clock at
 render time. Re-running the generator against an unchanged snapshot
@@ -110,7 +110,7 @@ If you use this report, cite the underlying datasets:
 
 ### APA
 
-Harpd. (2026). *Harpd AI Datasets — Rankings*. https://harpd.com/rank/ (Accessed: 2026-11-13)
+Harpd. (2026). *Harpd AI Datasets — Rankings*. https://harpd.com/rank/ (Accessed: 2026-11-14)
 
 ### Licence
 
