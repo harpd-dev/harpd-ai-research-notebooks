@@ -7,7 +7,7 @@
 ## Data timestamp
 
 - Dataset `generatedAt`: `2026-09-09T06:33:49.935Z`
-- Dataset `lastUpdated`: `2026-11-16T19:40:56.181Z`
+- Dataset `lastUpdated`: `2026-11-17T18:38:31.159Z`
 - Snapshot date used for this report: `2026-09-09`
 
 The snapshot date is taken from the dataset itself, not from the clock at
